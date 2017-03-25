@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+<body>
+<div class="tabs">
+	<ul class="nav nav-pills">
+		<li class="nav-item"><a class="nav-link" href="1">Table1</a></li>
+		<li class="nav-item"><a class="nav-link" href="2">Table2</a></li>
+		<li class="nav-item"><a class="nav-link" href="3">Table3</a></li>
+	</ul>
+	<table id='example-table' name='example-table'>
+	<tbody>
+	{% for row,column in table.iteritems() %}
+	<tr>
+		<td>
+			{{ row }}
+			{% for item in column %}
+			{% if item %}
+			<td>{{item}}</td>
+			{% else %}
+			<td><input type="text" name="t"></td>
+			{% endif %}
+			{% endfor %}
+		</td>
+	</tr>
+	{% endfor %}
+	</tbody>
+	</table>
+	<button class="btn btn-primary" id='convert-table' name="convert-table">Convert!</button>
+</div>
+
+</body>
+	<script>
+		$('#convert-table').click( function() {
+			var result = {};
+			var refTab = document.getElementById("example-table")
+var  ttl;
+// Loop through all rows and columns of the table and popup alert with the value
+// /content of each cell.
+for ( var i = 0; row = refTab.rows[i]; i++ ) {
+   row = refTab.rows[i];
+   var cell_row = [];
+   for ( var j = 0; col = row.cells[j]; j++ ) {
+   	//console.log(col.firstChild.value);
+   	cell_row.push(col.firstChild.value);
+   	//result[row.firstChild] = col.firstChild.nodeValue;
+      //alert(col.firstChild.nodeValue);
+   }
+   result["A"+(i+1)] = cell_row;
+}
+console.log(JSON.stringify(result))
+$.ajax({
+	type: 'POST',
+	url: window.location.pathname,
+	data: JSON.stringify(result),
+	contentType: "application/json"
+}
+	);
+		});
+	</script>
+</html>
